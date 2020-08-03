@@ -125,3 +125,8 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
+
+## Stone war
+/android/assets/img/*
+!/android/assets/img/fnt/
+!/android/assets/img/skin.json
