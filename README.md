@@ -1,6 +1,6 @@
 # Stone wars
-Stone wars is a turn-based game for a company of no more than 4 people with simple mechanics and rules
+A turn-based strategy for a company of 4 people or less. Develop your country, surround and capture cities, build buildings on them and defeat your enemies! 
 
 [Read in russian](README.ru-RU.md)
 ## Rules
-TODO: Fill this field
+The game is intended for a company, but there is a mode for single player and a campaign.
