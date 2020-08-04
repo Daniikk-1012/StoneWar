@@ -1,0 +1,101 @@
+{
+  Color : {
+    font : {
+      r : 0.341176471
+      g : 0.341176471
+      b : 0.341176471
+      a : 1
+    }
+    fontDown : {
+      r : 0.474509804
+      g : 0.474509804
+      b : 0.474509804
+      a : 1
+    }
+    bar : {
+      r : 0.866666667
+      g : 0.894117647
+      b : 0.894117647
+      a : 1
+    }
+  }
+  TintedDrawable : {
+    bar : {
+      name : pixel
+      color : bar
+    }
+  }
+  BitmapFont : {
+    regularSmall : {
+      file : fnt/regular-small.fnt
+      scaledSize : 38
+      markupEnabled : true
+    }
+    regularLarge : {
+      file : fnt/regular-large.fnt
+      scaledSize : 44
+      markupEnabled : true
+    }
+    bold : {
+      file : fnt/bold.fnt
+      scaledSize : 86
+      markupEnabled : true
+    }
+  }
+  LabelStyle : {
+    regularSmall : {
+      font : regularSmall
+      fontColor : font
+    }
+    regularLarge : {
+      font : regularLarge
+      fontColor : font
+    }
+    bold : {
+      font : bold
+      fontColor : font
+    }
+  }
+  TextButtonStyle : {
+    play : {
+      up : button/play/up
+      down : button/play/down
+      font : regularSmall
+      fontColor : font
+      downFontColor : fontDown
+    }
+    tutorial : {
+      up : button/tutorial/up
+      down : button/tutorial/down
+      font : regularSmall
+      fontColor : font
+      downFontColor : fontDown
+    }
+    campaign : {
+      up : button/campaign/up
+      down : button/campaign/down
+      font : regularSmall
+      fontColor : font
+      downFontColor : fontDown
+    }
+    settings : {
+      up : button/settings/up
+      down : button/settings/down
+      font : regularSmall
+      fontColor : font
+      downFontColor : fontDown
+    }
+    exit : {
+      up : button/exit/up
+      down : button/exit/down
+      font : regularSmall
+      fontColor : font
+      downFontColor : fontDown
+    }
+    transparent : {
+      font : regularLarge
+      fontColor : font
+      downFontColor : fontDown
+    }
+  }
+}
