@@ -27,8 +27,8 @@ public class MainMenuScreen implements Screen {
     private TextButton campaignButton;
     private TextButton settingsButton;
     private TextButton exitButton;
-    private Label companyLabel;
-    private Label yearLabel;
+    private TextButton achievementsButton;
+    private Label versionLabel;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -115,13 +115,13 @@ public class MainMenuScreen implements Screen {
         Table bottomBar = new Table(game.skin);
         bottomBar.setBackground("bar");
 
-        companyLabel = new Label("main-menu.company", game.skin, "regularLarge");
-        bottomBar.add(companyLabel).growY().padLeft(BAR_HORIZONTAL_PADDING);
+        achievementsButton = new TextButton("main-menu.achievements", game.skin, "transparent");
+        bottomBar.add(achievementsButton).growY().padLeft(BAR_HORIZONTAL_PADDING);
 
         bottomBar.add().grow();
 
-        yearLabel = new Label("main-menu.year", game.skin, "regularLarge");
-        bottomBar.add(yearLabel).growY().padRight(BAR_HORIZONTAL_PADDING);
+        versionLabel = new Label("main-menu.version", game.skin, "regularLarge");
+        bottomBar.add(versionLabel).growY().padRight(BAR_HORIZONTAL_PADDING);
 
         rootTable.add(bottomBar).growX().height(BAR_HEIGHT);
 
@@ -137,8 +137,8 @@ public class MainMenuScreen implements Screen {
         campaignButton.setText(game.bundle.get("main-menu.campaign"));
         settingsButton.setText(game.bundle.get("main-menu.settings"));
         exitButton.setText(game.bundle.get("main-menu.exit"));
-        companyLabel.setText(game.bundle.get("main-menu.company"));
-        yearLabel.setText(game.bundle.get("main-menu.year"));
+        achievementsButton.setText(game.bundle.get("main-menu.achievements"));
+        versionLabel.setText(game.bundle.get("main-menu.version"));
     }
 
     @Override
