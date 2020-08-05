@@ -1,2 +1,32 @@
 {
+  Color : {
+    font : {
+      r : 0.341176471
+      g : 0.341176471
+      b : 0.341176471
+      a : 1
+    }
+  }
+  BitmapFont : {
+    regularSmall : {
+      file : fnt/regular-small.fnt
+      scaledSize : 38
+      markupEnabled : true
+    }
+    bold : {
+      file : fnt/bold.fnt
+      scaledSize : 86
+      markupEnabled : true
+    }
+  }
+  LabelStyle : {
+    regularSmall : {
+      font : regularSmall
+      fontColor : font
+    }
+    bold : {
+      font : bold
+      fontColor : font
+    }
+  }
 }

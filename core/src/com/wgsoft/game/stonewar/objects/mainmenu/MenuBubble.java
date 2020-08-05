@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 
-import static com.wgsoft.game.stonewar.MyGdxGame.game;
 import static com.wgsoft.game.stonewar.Const.*;
 
 public class MenuBubble extends Actor {
@@ -15,8 +14,8 @@ public class MenuBubble extends Actor {
     private float speed;
 
     public MenuBubble(boolean initial){
-        region = game.skin.getRegion("menu-bubble/"+MENU_BUBBLES[MathUtils.random(MENU_BUBBLES.length-1)]);
-        float size = MathUtils.random(MIN_MENU_BUBBLE_SIZE, MAX_MENU_BUBBLE_SIZE);
+        region = game.skin.getRegion("menu-bubble/"+COLOR_BUBBLES[MathUtils.random(COLOR_BUBBLES.length-1)]);
+        float size = MathUtils.random(MIN_COLOR_BUBBLE_SIZE, MAX_COLOR_BUBBLE_SIZE);
         setSize(size, size);
         percentX = MathUtils.random();
         if(initial){
@@ -24,7 +23,7 @@ public class MenuBubble extends Actor {
         }else{
             percentY = 0f;
         }
-        speed = MathUtils.random(0.05f, 0.2f);
+        speed = MathUtils.random(MIN_MENU_BUBBLE_SPEED, MAX_MENU_BUBBLE_SPEED);
     }
 
     @Override
