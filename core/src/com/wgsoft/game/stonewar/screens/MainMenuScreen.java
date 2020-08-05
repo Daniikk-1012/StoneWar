@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.objects.mainmenu.MenuBubble;
 
-import static com.wgsoft.game.stonewar.MyGdxGame.game;
 import static com.wgsoft.game.stonewar.Const.*;
 
 public class MainMenuScreen implements Screen {
@@ -27,8 +26,8 @@ public class MainMenuScreen implements Screen {
     private TextButton campaignButton;
     private TextButton settingsButton;
     private TextButton exitButton;
-    private Label companyLabel;
-    private Label yearLabel;
+    private TextButton achievementsButton;
+    private Label versionLabel;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -51,12 +50,12 @@ public class MainMenuScreen implements Screen {
         topBarTable.setBackground("bar");
 
         rateButton = new TextButton("main-menu.rate", game.skin, "transparent");
-        topBarTable.add(rateButton).growY().padLeft(BAR_HORIZONTAL_PADDING);
+        topBarTable.add(rateButton).growY().padLeft(BAR_PADDING_HORIZONTAL);
 
         topBarTable.add().grow();
 
         authorsButton = new TextButton("main-menu.authors", game.skin, "transparent");
-        topBarTable.add(authorsButton).growY().padRight(BAR_HORIZONTAL_PADDING);
+        topBarTable.add(authorsButton).growY().padRight(BAR_PADDING_HORIZONTAL);
 
         rootTable.add(topBarTable).growX().height(BAR_HEIGHT);
 
@@ -64,7 +63,7 @@ public class MainMenuScreen implements Screen {
         rootTable.add().grow();
         rootTable.row();
 
-        titleLabel = new Label("main-menu.title", game.skin, "bold");
+        titleLabel = new Label("title", game.skin, "bold");
         rootTable.add(titleLabel).expandX();
 
         rootTable.row();
@@ -115,13 +114,13 @@ public class MainMenuScreen implements Screen {
         Table bottomBar = new Table(game.skin);
         bottomBar.setBackground("bar");
 
-        companyLabel = new Label("main-menu.company", game.skin, "regularLarge");
-        bottomBar.add(companyLabel).growY().padLeft(BAR_HORIZONTAL_PADDING);
+        achievementsButton = new TextButton("main-menu.achievements", game.skin, "transparent");
+        bottomBar.add(achievementsButton).growY().padLeft(BAR_PADDING_HORIZONTAL);
 
         bottomBar.add().grow();
 
-        yearLabel = new Label("main-menu.year", game.skin, "regularLarge");
-        bottomBar.add(yearLabel).growY().padRight(BAR_HORIZONTAL_PADDING);
+        versionLabel = new Label("main-menu.version", game.skin, "regularLarge");
+        bottomBar.add(versionLabel).growY().padRight(BAR_PADDING_HORIZONTAL);
 
         rootTable.add(bottomBar).growX().height(BAR_HEIGHT);
 
@@ -131,14 +130,14 @@ public class MainMenuScreen implements Screen {
     public void localize(){
         rateButton.setText(game.bundle.get("main-menu.rate"));
         authorsButton.setText(game.bundle.get("main-menu.authors"));
-        titleLabel.setText(game.bundle.get("main-menu.title"));
+        titleLabel.setText(game.bundle.get("title"));
         playButton.setText(game.bundle.get("main-menu.play"));
         tutorialButton.setText(game.bundle.get("main-menu.tutorial"));
         campaignButton.setText(game.bundle.get("main-menu.campaign"));
         settingsButton.setText(game.bundle.get("main-menu.settings"));
         exitButton.setText(game.bundle.get("main-menu.exit"));
-        companyLabel.setText(game.bundle.get("main-menu.company"));
-        yearLabel.setText(game.bundle.get("main-menu.year"));
+        achievementsButton.setText(game.bundle.get("main-menu.achievements"));
+        versionLabel.setText(game.bundle.get("main-menu.version"));
     }
 
     @Override

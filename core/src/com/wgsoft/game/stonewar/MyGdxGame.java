@@ -2,22 +2,22 @@ package com.wgsoft.game.stonewar;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.wgsoft.game.stonewar.screens.LoadingScreen;
 import com.wgsoft.game.stonewar.screens.MainMenuScreen;
 
 import java.util.Locale;
 
+import static com.wgsoft.game.stonewar.Const.*;
+
 public class MyGdxGame extends Game {
-	public static MyGdxGame game;
+	public AssetManager assetManager;
+	public boolean loaded;
 
 	public I18NBundle bundle;
 
@@ -25,6 +25,7 @@ public class MyGdxGame extends Game {
 
 	public Skin skin;
 
+	public LoadingScreen loadingScreen;
 	public MainMenuScreen mainMenuScreen;
 
 	public MyGdxGame(){
@@ -33,23 +34,23 @@ public class MyGdxGame extends Game {
 	
 	@Override
 	public void create () {
+		assetManager = new AssetManager();
+
 		batch = new SpriteBatch();
 
-		skin = new Skin(Gdx.files.internal("img/skin.json"));
-		ObjectMap.Entries<String, BitmapFont> entries = new ObjectMap.Entries<>(skin.getAll(BitmapFont.class));
-		for (ObjectMap.Entry<String, BitmapFont> entry : entries){
-			entry.value.setUseIntegerPositions(false);
-			Array.ArrayIterator<TextureRegion> iterator = new Array.ArrayIterator<>(entry.value.getRegions());
-			for(TextureRegion region : iterator){
-				region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-			}
-		}
+		loadingScreen = new LoadingScreen();
 
-		mainMenuScreen = new MainMenuScreen();
+		localize();
 
+		setScreen(loadingScreen);
+	}
+
+	public void localize(){
 		localize(null, null, null);
-
-		setScreen(mainMenuScreen);
+		loadingScreen.localize();
+		if(loaded) {
+			mainMenuScreen.localize();
+		}
 	}
 
 	private void localize(String s1, String s2, String s3){
@@ -67,7 +68,6 @@ public class MyGdxGame extends Game {
 			}
 			bundle = I18NBundle.createBundle(fileHandle, locale);
 		}
-		mainMenuScreen.localize();
 	}
 
 	@Override
@@ -76,14 +76,17 @@ public class MyGdxGame extends Game {
 		super.render();
 	}
 
+	//Do NOT dispose loadingScreen, it is disposed automatically
 	@Override
 	public void dispose () {
 		super.dispose();
 
+		assetManager.dispose();
+
 		batch.dispose();
 
-		skin.dispose();
-
-		mainMenuScreen.dispose();
+		if(mainMenuScreen != null) {
+			mainMenuScreen.dispose();
+		}
 	}
 }

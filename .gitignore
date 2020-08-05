@@ -130,3 +130,6 @@ Thumbs.db
 /android/assets/img/*
 !/android/assets/img/fnt/
 !/android/assets/img/skin.json
+/android/assets/loading/*
+!/android/assets/loading/fnt/
+!/android/assets/loading/skin.json
