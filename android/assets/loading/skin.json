@@ -13,8 +13,8 @@
       scaledSize : 38
       markupEnabled : true
     }
-    bold : {
-      file : fnt/bold.fnt
+    boldLarge : {
+      file : fnt/bold-large.fnt
       scaledSize : 86
       markupEnabled : true
     }
@@ -24,8 +24,8 @@
       font : regularSmall
       fontColor : font
     }
-    bold : {
-      font : bold
+    boldLarge : {
+      font : boldLarge
       fontColor : font
     }
   }

@@ -18,11 +18,21 @@
       b : 0.894117647
       a : 1
     }
+    transparent : {
+      r : 0
+      g : 0
+      b : 0
+      a : 0
+    }
   }
   TintedDrawable : {
     bar : {
       name : pixel
       color : bar
+    }
+    selection : {
+      name : pixel
+      color : transparent
     }
   }
   BitmapFont : {
@@ -36,8 +46,8 @@
       scaledSize : 44
       markupEnabled : true
     }
-    bold : {
-      file : fnt/bold.fnt
+    boldLarge : {
+      file : fnt/bold-large.fnt
       scaledSize : 86
       markupEnabled : true
     }
@@ -51,8 +61,8 @@
       font : regularLarge
       fontColor : font
     }
-    bold : {
-      font : bold
+    boldLarge : {
+      font : boldLarge
       fontColor : font
     }
   }
@@ -96,6 +106,39 @@
       font : regularLarge
       fontColor : font
       downFontColor : fontDown
+    }
+  }
+  ScrollPaneStyle : {
+    language : {
+      background : select-box/language/scroll-pane/background
+    }
+  }
+  ListStyle : {
+    language : {
+      selection : selection
+      font : regularSmall
+      fontColorSelected : fontDown
+      fontColorUnselected : font
+    }
+  }
+  SelectBoxStyle : {
+    language : {
+      background : select-box/language/background
+      backgroundOpen : select-box/language/background-open
+      listStyle : language
+      scrollStyle : language
+      font : regularSmall
+      fontColor : font
+    }
+  }
+  SliderStyle : {
+    music : {
+      background : slider/background
+      knob : slider/knob
+    }
+    sound : {
+      background : slider/background
+      knob : slider/knob
     }
   }
 }

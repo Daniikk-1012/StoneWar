@@ -8,14 +8,14 @@ import com.badlogic.gdx.utils.Align;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class MenuBubble extends Actor {
+public class Bubble extends Actor {
     private TextureRegion region;
     private float percentX, percentY;
     private float speed;
 
-    public MenuBubble(boolean initial){
-        region = game.skin.getRegion("menu-bubble/"+COLOR_BUBBLES[MathUtils.random(COLOR_BUBBLES.length-1)]);
-        float size = MathUtils.random(MIN_COLOR_BUBBLE_SIZE, MAX_COLOR_BUBBLE_SIZE);
+    public Bubble(boolean initial){
+        region = game.skin.getRegion("menu-bubble/"+BUBBLES[MathUtils.random(BUBBLES.length-1)]);
+        float size = MathUtils.random(MIN_BUBBLE_SIZE, MAX_BUBBLE_SIZE);
         setSize(size, size);
         percentX = MathUtils.random();
         if(initial){
@@ -23,7 +23,7 @@ public class MenuBubble extends Actor {
         }else{
             percentY = 0f;
         }
-        speed = MathUtils.random(MIN_MENU_BUBBLE_SPEED, MAX_MENU_BUBBLE_SPEED);
+        speed = MathUtils.random(MIN_BUBBLE_SPEED, MAX_BUBBLE_SPEED);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class MenuBubble extends Actor {
     public void act(float delta) {
         percentY += speed*delta;
         if(percentY >= 1f){
-            MenuBubble menuBubble = new MenuBubble(false);
-            getStage().addActor(menuBubble);
-            menuBubble.setPositionFromPercent();
+            Bubble bubble = new Bubble(false);
+            getStage().addActor(bubble);
+            bubble.setPositionFromPercent();
             remove();
         }else {
             setPositionFromPercent();

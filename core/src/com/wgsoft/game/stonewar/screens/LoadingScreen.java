@@ -13,11 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.wgsoft.game.stonewar.Localizable;
 import com.wgsoft.game.stonewar.objects.loading.LoadingBubble;
+import com.wgsoft.game.stonewar.objects.mainmenu.Bubble;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class LoadingScreen implements Screen {
+public class LoadingScreen implements Screen, Localizable {
     public Skin skin;
 
     private Stage backgroundStage;
@@ -60,7 +62,7 @@ public class LoadingScreen implements Screen {
         Table frontRootTable = new Table(skin);
         frontRootTable.setFillParent(true);
 
-        titleLabel = new Label("title", skin, "bold");
+        titleLabel = new Label("title", skin, "boldLarge");
         frontRootTable.add(titleLabel).expand();
 
         uiStage.addActor(frontRootTable);
@@ -100,7 +102,14 @@ public class LoadingScreen implements Screen {
                 }
             }
             game.loaded = true;
+            game.bubbleBackgroundStage = new Stage(new ScreenViewport(), game.batch);
+            for(int i = 0; i < BUBBLE_COUNT; i++){
+                Bubble bubble = new Bubble(true);
+                game.bubbleBackgroundStage.addActor(bubble);
+                bubble.setPositionFromPercent();
+            }
             game.mainMenuScreen = new MainMenuScreen();
+            game.settingsScreen = new SettingsScreen();
             game.localize();
             game.setScreen(game.mainMenuScreen);
         }
