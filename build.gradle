@@ -19,7 +19,7 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0'
+    version = '0.1-dev'
     ext {
         appName = "Stone war"
         gdxVersion = '1.9.11'

@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.wgsoft.game.stonewar.objects.mainmenu.MenuBubble;
+import com.wgsoft.game.stonewar.Localizable;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen implements Screen, Localizable {
     private Stage backgroundStage;
     private Stage uiStage;
 
@@ -32,16 +32,10 @@ public class MainMenuScreen implements Screen {
     private InputMultiplexer inputMultiplexer;
 
     public MainMenuScreen(){
-        backgroundStage = new Stage(new ScreenViewport(), game.batch);
+        backgroundStage = game.bubbleBackgroundStage;
         uiStage = new Stage(new ScreenViewport(), game.batch);
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
-
-        for(int i = 0; i < MENU_BUBBLE_COUNT; i++){
-            MenuBubble menuBubble = new MenuBubble(true);
-            backgroundStage.addActor(menuBubble);
-            menuBubble.setPositionFromPercent();
-        }
 
         Table rootTable = new Table(game.skin);
         rootTable.setFillParent(true);
@@ -63,7 +57,7 @@ public class MainMenuScreen implements Screen {
         rootTable.add().grow();
         rootTable.row();
 
-        titleLabel = new Label("title", game.skin, "bold");
+        titleLabel = new Label("title", game.skin, "boldLarge");
         rootTable.add(titleLabel).expandX();
 
         rootTable.row();
@@ -92,6 +86,12 @@ public class MainMenuScreen implements Screen {
         rootTable.row();
 
         settingsButton = new TextButton("main-menu.settings", game.skin, "settings");
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.settingsScreen);
+            }
+        });
         rootTable.add(settingsButton).expandX();
 
         rootTable.row();
@@ -111,18 +111,18 @@ public class MainMenuScreen implements Screen {
         rootTable.add().grow();
         rootTable.row();
 
-        Table bottomBar = new Table(game.skin);
-        bottomBar.setBackground("bar");
+        Table bottomBarTable = new Table(game.skin);
+        bottomBarTable.setBackground("bar");
 
         achievementsButton = new TextButton("main-menu.achievements", game.skin, "transparent");
-        bottomBar.add(achievementsButton).growY().padLeft(BAR_PADDING_HORIZONTAL);
+        bottomBarTable.add(achievementsButton).growY().padLeft(BAR_PADDING_HORIZONTAL);
 
-        bottomBar.add().grow();
+        bottomBarTable.add().grow();
 
-        versionLabel = new Label("main-menu.version", game.skin, "regularLarge");
-        bottomBar.add(versionLabel).growY().padRight(BAR_PADDING_HORIZONTAL);
+        versionLabel = new Label("version", game.skin, "regularLarge");
+        bottomBarTable.add(versionLabel).growY().padRight(BAR_PADDING_HORIZONTAL);
 
-        rootTable.add(bottomBar).growX().height(BAR_HEIGHT);
+        rootTable.add(bottomBarTable).growX().height(BAR_HEIGHT);
 
         uiStage.addActor(rootTable);
     }
@@ -137,7 +137,7 @@ public class MainMenuScreen implements Screen {
         settingsButton.setText(game.bundle.get("main-menu.settings"));
         exitButton.setText(game.bundle.get("main-menu.exit"));
         achievementsButton.setText(game.bundle.get("main-menu.achievements"));
-        versionLabel.setText(game.bundle.get("main-menu.version"));
+        versionLabel.setText(game.bundle.get("version"));
     }
 
     @Override

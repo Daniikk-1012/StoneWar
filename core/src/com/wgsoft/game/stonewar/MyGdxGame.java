@@ -2,22 +2,27 @@ package com.wgsoft.game.stonewar;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.wgsoft.game.stonewar.screens.LoadingScreen;
 import com.wgsoft.game.stonewar.screens.MainMenuScreen;
+import com.wgsoft.game.stonewar.screens.SettingsScreen;
 
 import java.util.Locale;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class MyGdxGame extends Game {
+public class MyGdxGame extends Game implements Localizable {
 	public AssetManager assetManager;
 	public boolean loaded;
+
+	public Preferences prefs;
 
 	public I18NBundle bundle;
 
@@ -25,8 +30,11 @@ public class MyGdxGame extends Game {
 
 	public Skin skin;
 
+	public Stage bubbleBackgroundStage;
+
 	public LoadingScreen loadingScreen;
 	public MainMenuScreen mainMenuScreen;
+	public SettingsScreen settingsScreen;
 
 	public MyGdxGame(){
 		game = this;
@@ -40,20 +48,51 @@ public class MyGdxGame extends Game {
 
 		loadingScreen = new LoadingScreen();
 
-		localize();
+		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
+		init();
 
 		setScreen(loadingScreen);
 	}
 
-	public void localize(){
-		localize(null, null, null);
-		loadingScreen.localize();
-		if(loaded) {
-			mainMenuScreen.localize();
+	public void init(){
+		if(prefs.getBoolean("firstRun", true)){
+			prefs.putBoolean("firstRun", false);
+			initBundle(null, null, null);
+			localize();
+			if(bundle.getLocale().getCountry().equals("")) {
+				prefs.putString("settings.language", bundle.getLocale().getLanguage());
+			}else if(bundle.getLocale().getVariant().equals("")){
+				prefs.putString("settings.language", bundle.getLocale().getLanguage()+"_"+bundle.getLocale().getCountry());
+			}else{
+				prefs.putString("settings.language", bundle.getLocale().getLanguage()+"_"+bundle.getLocale().getCountry()+"_"+bundle.getLocale().getVariant());
+			}
+			prefs.putFloat("settings.music", DEFAULT_SETTINGS_MUSIC_VOLUME);
+			prefs.putFloat("settings.sound", DEFAULT_SETTINGS_SOUND_VOLUME);
+			prefs.flush();
+		}else{
+			String[] localeStrings = prefs.getString("settings.language").split("_");
+			if(localeStrings.length == 1){
+				initBundle(localeStrings[0], null, null);
+			}else if(localeStrings.length == 2){
+				initBundle(localeStrings[0], localeStrings[1], null);
+			}else{
+				initBundle(localeStrings[0], localeStrings[1], localeStrings[2]);
+			}
+			localize();
+			//TODO Music and sound volume init
 		}
 	}
 
-	private void localize(String s1, String s2, String s3){
+	public void localize(){
+		if(loaded) {
+			mainMenuScreen.localize();
+			settingsScreen.localize();
+		}else{
+			loadingScreen.localize();
+		}
+	}
+
+	public void initBundle(String s1, String s2, String s3){
 		FileHandle fileHandle = Gdx.files.internal("bundle/bundle");
 		if(s1 == null){
 			bundle = I18NBundle.createBundle(fileHandle);
@@ -76,7 +115,7 @@ public class MyGdxGame extends Game {
 		super.render();
 	}
 
-	//Do NOT dispose loadingScreen, it is disposed automatically
+	//Do NOT dispose loadingScreen
 	@Override
 	public void dispose () {
 		super.dispose();
@@ -85,8 +124,9 @@ public class MyGdxGame extends Game {
 
 		batch.dispose();
 
-		if(mainMenuScreen != null) {
+		if(loaded) {
 			mainMenuScreen.dispose();
+			settingsScreen.dispose();
 		}
 	}
 }
