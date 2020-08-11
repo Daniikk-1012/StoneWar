@@ -191,7 +191,6 @@ public class LoadingScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         dispose();
     }
 

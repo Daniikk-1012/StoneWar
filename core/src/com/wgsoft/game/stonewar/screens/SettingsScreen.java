@@ -2,10 +2,11 @@ package com.wgsoft.game.stonewar.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -17,19 +18,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
+import com.wgsoft.game.stonewar.TransitionableScreen;
 
 import java.util.Locale;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class SettingsScreen implements Screen, Localizable {
+public class SettingsScreen extends TransitionableScreen implements Localizable {
     private Stage backgroundStage;
     private Stage uiStage;
 
+    private Table rootTable;
+    private Image topBarImage;
+    private Table wrapperTable;
     private Label settingsLabel;
     private Label languageLabel;
+    private SelectBox<String> languageSelectBox;
     private Label musicLabel;
+    private Slider musicSlider;
+    private Label musicPercentLabel;
     private Label soundLabel;
+    private Slider soundSlider;
+    private Label soundPercentLabel;
+    private Table bottomBarTable;
     private TextButton backButton;
     private TextButton acceptButton;
 
@@ -41,10 +52,10 @@ public class SettingsScreen implements Screen, Localizable {
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
 
-        Table rootTable = new Table(game.skin);
+        rootTable = new Table(game.skin);
         rootTable.setFillParent(true);
 
-        Image topBarImage = new Image(game.skin, "bar");
+        topBarImage = new Image(game.skin, "bar");
         rootTable.add(topBarImage).growX().height(BAR_HEIGHT);
 
         rootTable.row();
@@ -58,14 +69,14 @@ public class SettingsScreen implements Screen, Localizable {
         rootTable.add().grow();
         rootTable.row();
 
-        Table wrapperTable = new Table(game.skin);
+        wrapperTable = new Table(game.skin);
 
         languageLabel = new Label("settings.language", game.skin, "regularSmall");
         wrapperTable.add(languageLabel).growX();
 
         wrapperTable.row();
 
-        final SelectBox <String> languageSelectBox = new SelectBox<>(game.skin, "language");
+        languageSelectBox = new SelectBox<>(game.skin, "language");
         languageSelectBox.setAlignment(Align.center);
         languageSelectBox.getList().getStyle().selection.setTopHeight((SETTINGS_LANGUAGE_LABEL_HEIGHT-languageSelectBox.getList().getItemHeight())/2f);
         languageSelectBox.getList().getStyle().selection.setBottomHeight((SETTINGS_LANGUAGE_LABEL_HEIGHT-languageSelectBox.getList().getItemHeight())/2f);
@@ -102,21 +113,21 @@ public class SettingsScreen implements Screen, Localizable {
 
         Stack musicStack = new Stack();
 
-        final Slider musicSlider = new Slider(MIN_SETTINGS_MUSIC_VOLUME, MAX_SETTINGS_MUSIC_VOLUME, SETTINGS_MUSIC_VOLUME_STEP, false, game.skin, "music");
+        musicSlider = new Slider(MIN_SETTINGS_MUSIC_VOLUME, MAX_SETTINGS_MUSIC_VOLUME, SETTINGS_MUSIC_VOLUME_STEP, false, game.skin, "music");
         musicSlider.getStyle().knobBefore = game.skin.getTiledDrawable("slider/music/knob-before");
         musicSlider.setStyle(musicSlider.getStyle());
         musicSlider.setValue(game.prefs.getFloat("settings.music"));
-        musicStack.add(musicSlider);
-
-        final Label musicPercentLabel = new Label(((int)musicSlider.getValue())+"%", game.skin, "regularSmall");
-        musicPercentLabel.setAlignment(Align.center);
-        musicPercentLabel.setTouchable(Touchable.disabled);
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicPercentLabel.setText(((int)musicSlider.getValue())+"%");
             }
         });
+        musicStack.add(musicSlider);
+
+        musicPercentLabel = new Label(((int)musicSlider.getValue())+"%", game.skin, "regularSmall");
+        musicPercentLabel.setAlignment(Align.center);
+        musicPercentLabel.setTouchable(Touchable.disabled);
         musicStack.add(musicPercentLabel);
 
         wrapperTable.add(musicStack).growX();
@@ -132,21 +143,21 @@ public class SettingsScreen implements Screen, Localizable {
 
         Stack soundStack = new Stack();
 
-        final Slider soundSlider = new Slider(MIN_SETTINGS_SOUND_VOLUME, MAX_SETTINGS_SOUND_VOLUME, SETTINGS_SOUND_VOLUME_STEP, false, game.skin, "sound");
+        soundSlider = new Slider(MIN_SETTINGS_SOUND_VOLUME, MAX_SETTINGS_SOUND_VOLUME, SETTINGS_SOUND_VOLUME_STEP, false, game.skin, "sound");
         soundSlider.getStyle().knobBefore = game.skin.getTiledDrawable("slider/sound/knob-before");
         soundSlider.setStyle(soundSlider.getStyle());
         soundSlider.setValue(game.prefs.getFloat("settings.sound"));
-        soundStack.add(soundSlider);
-
-        final Label soundPercentLabel = new Label(((int)soundSlider.getValue())+"%", game.skin, "regularSmall");
-        soundPercentLabel.setAlignment(Align.center);
-        soundPercentLabel.setTouchable(Touchable.disabled);
         soundSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 soundPercentLabel.setText(((int)soundSlider.getValue())+"%");
             }
         });
+        soundStack.add(soundSlider);
+
+        soundPercentLabel = new Label(((int)soundSlider.getValue())+"%", game.skin, "regularSmall");
+        soundPercentLabel.setAlignment(Align.center);
+        soundPercentLabel.setTouchable(Touchable.disabled);
         soundStack.add(soundPercentLabel);
 
         wrapperTable.add(soundStack).growX();
@@ -157,14 +168,14 @@ public class SettingsScreen implements Screen, Localizable {
         rootTable.add().grow();
         rootTable.row();
 
-        Table bottomBarTable = new Table(game.skin);
+        bottomBarTable = new Table(game.skin);
         bottomBarTable.setBackground("bar");
 
         backButton = new TextButton("back", game.skin, "transparent");
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.mainMenuScreen);
+                game.setScreen(game.transitionScreen.setup(game.settingsScreen, game.mainMenuScreen, false, 1.5f));
             }
         });
         bottomBarTable.add(backButton).padLeft(BAR_PADDING_HORIZONTAL);
@@ -206,10 +217,14 @@ public class SettingsScreen implements Screen, Localizable {
 
     @Override
     public void render(float delta) {
-        game.batch.setColor(1f, 1f, 1f, 1f); //It makes background transparent for a second without this
-        backgroundStage.act(delta);
+        if(getTransitionScreen() == null || getTransitionScreen().isToOnTop() && getTransitionScreen().getFrom() == this || !getTransitionScreen().isToOnTop() && getTransitionScreen().getTo() == this) {
+            backgroundStage.act(delta);
+        }
         uiStage.act(delta);
-        backgroundStage.draw();
+        game.batch.setColor(1f, 1f, 1f, 1f); //It makes background transparent for a second without this
+        if(getTransitionScreen() == null || getTransitionScreen().isToOnTop() && getTransitionScreen().getFrom() == this || !getTransitionScreen().isToOnTop() && getTransitionScreen().getTo() == this) {
+            backgroundStage.draw();
+        }
         uiStage.draw();
     }
 
@@ -224,6 +239,7 @@ public class SettingsScreen implements Screen, Localizable {
         }
         backgroundStage.getViewport().update(width, height, true);
         uiStage.getViewport().update(width, height, true);
+        rootTable.validate();
     }
 
     @Override
@@ -237,10 +253,40 @@ public class SettingsScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
     }
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public void transitionBegin() {
+        if(getTransitionScreen().getFrom() == this){
+            topBarImage.addAction(Actions.moveBy(0f, topBarImage.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade));
+            settingsLabel.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            wrapperTable.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade));
+        }else{
+            for(int i = 0; i < SETTINGS_LANGUAGES.length; i++){
+                if(SETTINGS_LANGUAGES[i].equals(game.prefs.getString("settings.language"))){
+                    languageSelectBox.setSelectedIndex(i);
+                    break;
+                }
+            }
+            musicSlider.setValue(game.prefs.getFloat("settings.music"));
+            musicPercentLabel.setText(((int)musicSlider.getValue())+"%");
+            soundSlider.setValue(game.prefs.getFloat("settings.sound"));
+            soundPercentLabel.setText(((int)soundSlider.getValue())+"%");
+
+            topBarImage.addAction(Actions.sequence(Actions.moveBy(0f, topBarImage.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, -topBarImage.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade))));
+            settingsLabel.addAction(Actions.sequence(Actions.moveBy(rootTable.getWidth(), 0f), Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            wrapperTable.addAction(Actions.sequence(Actions.moveBy(rootTable.getWidth(), 0f), Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            bottomBarTable.addAction(Actions.sequence(Actions.moveBy(0f, -bottomBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, bottomBarTable.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade))));
+        }
+    }
+
+    @Override
+    public void transitionEnd() {
+        rootTable.invalidate();
     }
 }
