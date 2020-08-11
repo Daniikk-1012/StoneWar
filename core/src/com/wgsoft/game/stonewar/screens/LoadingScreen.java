@@ -34,8 +34,6 @@ public class LoadingScreen implements Screen, Localizable {
     private InputMultiplexer inputMultiplexer;
 
     private Queue<Runnable> runnableQueue;
-    private Runnable stageRunnable;
-    private volatile boolean stageCreated;
 
     private boolean finished;
 
@@ -123,7 +121,6 @@ public class LoadingScreen implements Screen, Localizable {
                         @Override
                         public void run() {
                             game.bubbleBackgroundStage = new Stage(new ScreenViewport(), game.batch);
-                            stageCreated = true;
                         }
                     });
                     while(game.bubbleBackgroundStage == null){
