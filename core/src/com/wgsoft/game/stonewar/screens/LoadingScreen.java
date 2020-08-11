@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
 import com.wgsoft.game.stonewar.objects.loading.LoadingBubble;
@@ -32,6 +33,10 @@ public class LoadingScreen implements Screen, Localizable {
 
     private InputMultiplexer inputMultiplexer;
 
+    private Queue<Runnable> runnableQueue;
+
+    private boolean finished;
+
     public LoadingScreen(){
         loadingScreen = this;
 
@@ -43,6 +48,8 @@ public class LoadingScreen implements Screen, Localizable {
         uiStage = new Stage(new ScreenViewport(), game.batch);
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
+
+        runnableQueue = new Queue<>();
 
         for(int i = 0; i < LOADING_BUBBLE_COUNT; i++){
             backgroundStage.addActor(new LoadingBubble());
@@ -91,26 +98,71 @@ public class LoadingScreen implements Screen, Localizable {
         backgroundStage.draw();
         uiStage.draw();
 
-        if(game.assetManager.update()){
-            game.skin = game.assetManager.get("img/skin.json");
-            ObjectMap.Entries<String, BitmapFont> entries = new ObjectMap.Entries<>(game.skin.getAll(BitmapFont.class));
-            for (ObjectMap.Entry<String, BitmapFont> entry : entries){
-                entry.value.setUseIntegerPositions(false);
-                Array.ArrayIterator<TextureRegion> iterator = new Array.ArrayIterator<>(entry.value.getRegions());
-                for(TextureRegion region : iterator){
-                    region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-                }
-            }
+        if(game.assetManager.update() && !game.loaded) {
             game.loaded = true;
-            game.bubbleBackgroundStage = new Stage(new ScreenViewport(), game.batch);
-            for(int i = 0; i < BUBBLE_COUNT; i++){
-                Bubble bubble = new Bubble(true);
-                game.bubbleBackgroundStage.addActor(bubble);
-                bubble.setPositionFromPercent();
-            }
-            game.mainMenuScreen = new MainMenuScreen();
-            game.settingsScreen = new SettingsScreen();
-            game.localize();
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    game.skin = game.assetManager.get("img/skin.json");
+                    ObjectMap.Entries<String, BitmapFont> entries = new ObjectMap.Entries<>(game.skin.getAll(BitmapFont.class));
+                    for (ObjectMap.Entry<String, BitmapFont> entry : entries) {
+                        entry.value.setUseIntegerPositions(false);
+                        Array.ArrayIterator<TextureRegion> iterator = new Array.ArrayIterator<>(entry.value.getRegions());
+                        for (final TextureRegion region : iterator) {
+                            runnableQueue.addLast(new Runnable() {
+                                @Override
+                                public void run() {
+                                    region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                                }
+                            });
+                        }
+                    }
+                    runnableQueue.addFirst(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.bubbleBackgroundStage = new Stage(new ScreenViewport(), game.batch);
+                        }
+                    });
+                    while(game.bubbleBackgroundStage == null){
+                        try {
+                            Thread.sleep(100);
+                        }catch (InterruptedException ignored){
+                        }
+                    }
+                    for (int i = 0; i < BUBBLE_COUNT; i++) {
+                        Bubble bubble = new Bubble(true);
+                        game.bubbleBackgroundStage.addActor(bubble);
+                        bubble.setPositionFromPercent();
+                    }
+                    runnableQueue.addLast(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.mainMenuScreen = new MainMenuScreen();
+                        }
+                    });
+                    runnableQueue.addLast(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.settingsScreen = new SettingsScreen();
+                        }
+                    });
+                    while(
+                            game.mainMenuScreen == null
+                            || game.settingsScreen == null
+                    ){
+                        try {
+                            Thread.sleep(100);
+                        }catch (InterruptedException ignored){
+                        }
+                    }
+                    game.localize();
+                    finished = true;
+                }
+            };
+            thread.start();
+        }else if(runnableQueue.notEmpty()) {
+            runnableQueue.removeFirst().run();
+        }else if(finished){
             game.setScreen(game.mainMenuScreen);
         }
     }
@@ -139,12 +191,12 @@ public class LoadingScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         dispose();
     }
 
     @Override
     public void dispose() {
         skin.dispose();
+        game.loadingScreen = null;
     }
 }

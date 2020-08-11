@@ -2,22 +2,26 @@ package com.wgsoft.game.stonewar.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
+import com.wgsoft.game.stonewar.TransitionableScreen;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
-public class MainMenuScreen implements Screen, Localizable {
+public class MainMenuScreen extends TransitionableScreen implements Localizable {
     private Stage backgroundStage;
     private Stage uiStage;
 
+    private Table rootTable;
+    private Table topBarTable;
     private TextButton rateButton;
     private TextButton authorsButton;
     private Label titleLabel;
@@ -26,6 +30,7 @@ public class MainMenuScreen implements Screen, Localizable {
     private TextButton campaignButton;
     private TextButton settingsButton;
     private TextButton exitButton;
+    private Table bottomBarTable;
     private TextButton achievementsButton;
     private Label versionLabel;
 
@@ -37,10 +42,10 @@ public class MainMenuScreen implements Screen, Localizable {
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
 
-        Table rootTable = new Table(game.skin);
+        rootTable = new Table(game.skin);
         rootTable.setFillParent(true);
 
-        Table topBarTable = new Table(game.skin);
+        topBarTable = new Table(game.skin);
         topBarTable.setBackground("bar");
 
         rateButton = new TextButton("main-menu.rate", game.skin, "transparent");
@@ -89,7 +94,7 @@ public class MainMenuScreen implements Screen, Localizable {
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.settingsScreen);
+                game.setScreen(game.transitionScreen.setup(game.mainMenuScreen, game.settingsScreen, true, 1.5f));
             }
         });
         rootTable.add(settingsButton).expandX();
@@ -111,7 +116,7 @@ public class MainMenuScreen implements Screen, Localizable {
         rootTable.add().grow();
         rootTable.row();
 
-        Table bottomBarTable = new Table(game.skin);
+        bottomBarTable = new Table(game.skin);
         bottomBarTable.setBackground("bar");
 
         achievementsButton = new TextButton("main-menu.achievements", game.skin, "transparent");
@@ -148,9 +153,13 @@ public class MainMenuScreen implements Screen, Localizable {
 
     @Override
     public void render(float delta) {
-        backgroundStage.act(delta);
+        if(getTransitionScreen() == null || getTransitionScreen().isToOnTop() && getTransitionScreen().getFrom() == this || !getTransitionScreen().isToOnTop() && getTransitionScreen().getTo() == this) {
+            backgroundStage.act(delta);
+        }
         uiStage.act(delta);
-        backgroundStage.draw();
+        if(getTransitionScreen() == null || getTransitionScreen().isToOnTop() && getTransitionScreen().getFrom() == this || !getTransitionScreen().isToOnTop() && getTransitionScreen().getTo() == this) {
+            backgroundStage.draw();
+        }
         uiStage.draw();
     }
 
@@ -165,6 +174,7 @@ public class MainMenuScreen implements Screen, Localizable {
         }
         backgroundStage.getViewport().update(width, height, true);
         uiStage.getViewport().update(width, height, true);
+        rootTable.validate();
     }
 
     @Override
@@ -178,10 +188,37 @@ public class MainMenuScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
     }
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public void transitionBegin() {
+        if(getTransitionScreen().getFrom() == this) {
+            topBarTable.addAction(Actions.moveBy(0f, topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+            titleLabel.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            playButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            tutorialButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            campaignButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            settingsButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            exitButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+        }else{
+            topBarTable.addAction(Actions.sequence(Actions.moveBy(0f, topBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, -topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
+            titleLabel.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            playButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            tutorialButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            campaignButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            settingsButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            exitButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            bottomBarTable.addAction(Actions.sequence(Actions.moveBy(0f, -bottomBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
+        }
+    }
+
+    @Override
+    public void transitionEnd() {
+        rootTable.invalidate();
     }
 }

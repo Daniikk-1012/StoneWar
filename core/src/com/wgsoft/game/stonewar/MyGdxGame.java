@@ -32,7 +32,9 @@ public class MyGdxGame extends Game implements Localizable {
 
 	public Stage bubbleBackgroundStage;
 
+	public TransitionScreen transitionScreen;
 	public LoadingScreen loadingScreen;
+
 	public MainMenuScreen mainMenuScreen;
 	public SettingsScreen settingsScreen;
 
@@ -45,6 +47,8 @@ public class MyGdxGame extends Game implements Localizable {
 		assetManager = new AssetManager();
 
 		batch = new SpriteBatch();
+
+		transitionScreen = new TransitionScreen();
 
 		loadingScreen = new LoadingScreen();
 
@@ -123,6 +127,8 @@ public class MyGdxGame extends Game implements Localizable {
 		assetManager.dispose();
 
 		batch.dispose();
+
+		transitionScreen.dispose();
 
 		if(loaded) {
 			mainMenuScreen.dispose();
