@@ -5,10 +5,8 @@ import com.badlogic.gdx.Screen;
 public abstract class TransitionableScreen implements Screen {
     private TransitionScreen transitionScreen;
 
-    public void transitionBegin(){
-    }
-    public void transitionEnd(){
-    }
+    public abstract void transitionBegin();
+    public abstract void transitionEnd();
 
     public TransitionScreen getTransitionScreen() {
         return transitionScreen;

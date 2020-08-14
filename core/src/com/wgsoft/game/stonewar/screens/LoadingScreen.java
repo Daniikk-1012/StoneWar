@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
@@ -35,10 +37,10 @@ public class LoadingScreen implements Screen, Localizable {
 
     private Queue<Runnable> runnableQueue;
 
-    private boolean finished;
+    private boolean loaded;
 
     public LoadingScreen(){
-        loadingScreen = this;
+        game.loadingScreen = this;
 
         skin = new Skin(Gdx.files.internal("loading/skin.json"));
 
@@ -69,15 +71,17 @@ public class LoadingScreen implements Screen, Localizable {
         Table frontRootTable = new Table(skin);
         frontRootTable.setFillParent(true);
 
-        titleLabel = new Label("title", skin, "boldLarge");
-        frontRootTable.add(titleLabel).expand();
+        titleLabel = new Label("loading.title", skin, "boldLarge");
+        titleLabel.setAlignment(Align.center);
+        titleLabel.setWrap(true);
+        frontRootTable.add(titleLabel).grow();
 
         uiStage.addActor(frontRootTable);
     }
 
     public void localize(){
         loadingLabel.setText(game.bundle.get("loading.loading"));
-        titleLabel.setText(game.bundle.get("title"));
+        titleLabel.setText(game.bundle.get("loading.title"));
     }
 
     @Override
@@ -98,8 +102,8 @@ public class LoadingScreen implements Screen, Localizable {
         backgroundStage.draw();
         uiStage.draw();
 
-        if(game.assetManager.update() && !game.loaded) {
-            game.loaded = true;
+        if(game.assetManager.update() && !loaded) {
+            loaded = true;
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -117,6 +121,14 @@ public class LoadingScreen implements Screen, Localizable {
                             });
                         }
                     }
+                    float selectionPaddingVertical = (SELECT_BOX_ITEM_HEIGHT-game.skin.getFont("regularSmall").getCapHeight()+game.skin.getFont("regularSmall").getDescent()*2f)/2f;
+                    game.skin.getDrawable("selection").setTopHeight(selectionPaddingVertical);
+                    game.skin.getDrawable("selection").setBottomHeight(selectionPaddingVertical);
+                    //game.skin.get("red", Slider.SliderStyle.class).knobBefore = game.skin.getTiledDrawable("slider/red/knob-before");
+                    game.skin.get("blue", Slider.SliderStyle.class).knobBefore = game.skin.getTiledDrawable("slider/blue/knob-before");
+                    game.skin.get("green", Slider.SliderStyle.class).knobBefore = game.skin.getTiledDrawable("slider/green/knob-before");
+                    //game.skin.get("violet", Slider.SliderStyle.class).knobBefore = game.skin.getTiledDrawable("slider/violet/knob-before");
+                    //game.skin.get("yellow", Slider.SliderStyle.class).knobBefore = game.skin.getTiledDrawable("slider/yellow/knob-before");
                     runnableQueue.addFirst(new Runnable() {
                         @Override
                         public void run() {
@@ -146,23 +158,30 @@ public class LoadingScreen implements Screen, Localizable {
                             game.settingsScreen = new SettingsScreen();
                         }
                     });
+                    runnableQueue.addLast(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.matchSettingsScreen = new MatchSettingsScreen();
+                        }
+                    });
                     while(
                             game.mainMenuScreen == null
                             || game.settingsScreen == null
+                            || game.matchSettingsScreen == null
                     ){
                         try {
                             Thread.sleep(100);
                         }catch (InterruptedException ignored){
                         }
                     }
+                    game.loaded = true;
                     game.localize();
-                    finished = true;
                 }
             };
             thread.start();
         }else if(runnableQueue.notEmpty()) {
             runnableQueue.removeFirst().run();
-        }else if(finished){
+        }else if(game.loaded){
             game.setScreen(game.mainMenuScreen);
         }
     }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
 import com.wgsoft.game.stonewar.TransitionableScreen;
@@ -62,39 +63,47 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
         rootTable.add().grow();
         rootTable.row();
 
-        titleLabel = new Label("title", game.skin, "boldLarge");
-        rootTable.add(titleLabel).expandX();
+        titleLabel = new Label("main-menu.title", game.skin, "boldLarge");
+        titleLabel.setAlignment(Align.center);
+        titleLabel.setWrap(true);
+        rootTable.add(titleLabel).growX();
 
         rootTable.row();
         rootTable.add().grow();
         rootTable.row();
 
-        playButton = new TextButton("main-menu.play", game.skin, "play");
+        playButton = new TextButton("main-menu.play", game.skin, "red");
+        playButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.transitionScreen.setup(game.mainMenuScreen, game.matchSettingsScreen, true, SCREEN_TRANSITION_DURATION));
+            }
+        });
         rootTable.add(playButton).expandX();
 
         rootTable.row();
         rootTable.add().grow();
         rootTable.row();
 
-        tutorialButton = new TextButton("main-menu.tutorial", game.skin, "tutorial");
+        tutorialButton = new TextButton("main-menu.tutorial", game.skin, "blue");
         rootTable.add(tutorialButton).expandX();
 
         rootTable.row();
         rootTable.add().grow();
         rootTable.row();
 
-        campaignButton = new TextButton("main-menu.campaign", game.skin, "campaign");
+        campaignButton = new TextButton("main-menu.campaign", game.skin, "green");
         rootTable.add(campaignButton).expandX();
 
         rootTable.row();
         rootTable.add().grow();
         rootTable.row();
 
-        settingsButton = new TextButton("main-menu.settings", game.skin, "settings");
+        settingsButton = new TextButton("main-menu.settings", game.skin, "violet");
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.transitionScreen.setup(game.mainMenuScreen, game.settingsScreen, true, 1.5f));
+                game.setScreen(game.transitionScreen.setup(game.mainMenuScreen, game.settingsScreen, true, SCREEN_TRANSITION_DURATION));
             }
         });
         rootTable.add(settingsButton).expandX();
@@ -103,7 +112,7 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
         rootTable.add().grow();
         rootTable.row();
 
-        exitButton = new TextButton("main-menu.exit", game.skin, "exit");
+        exitButton = new TextButton("main-menu.exit", game.skin, "yellow");
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -124,7 +133,7 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
 
         bottomBarTable.add().grow();
 
-        versionLabel = new Label("version", game.skin, "regularLarge");
+        versionLabel = new Label("main-menu.version", game.skin, "regularLarge");
         bottomBarTable.add(versionLabel).growY().padRight(BAR_PADDING_HORIZONTAL);
 
         rootTable.add(bottomBarTable).growX().height(BAR_HEIGHT);
@@ -135,14 +144,42 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
     public void localize(){
         rateButton.setText(game.bundle.get("main-menu.rate"));
         authorsButton.setText(game.bundle.get("main-menu.authors"));
-        titleLabel.setText(game.bundle.get("title"));
+        titleLabel.setText(game.bundle.get("main-menu.title"));
         playButton.setText(game.bundle.get("main-menu.play"));
         tutorialButton.setText(game.bundle.get("main-menu.tutorial"));
         campaignButton.setText(game.bundle.get("main-menu.campaign"));
         settingsButton.setText(game.bundle.get("main-menu.settings"));
         exitButton.setText(game.bundle.get("main-menu.exit"));
         achievementsButton.setText(game.bundle.get("main-menu.achievements"));
-        versionLabel.setText(game.bundle.get("version"));
+        versionLabel.setText(game.bundle.get("main-menu.version"));
+    }
+
+    @Override
+    public void transitionBegin() {
+        if(getTransitionScreen().getFrom() == this) {
+            topBarTable.addAction(Actions.moveBy(0f, topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+            titleLabel.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            playButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            tutorialButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            campaignButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            settingsButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            exitButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+        }else{
+            topBarTable.addAction(Actions.sequence(Actions.moveBy(0f, topBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, -topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
+            titleLabel.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            playButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            tutorialButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            campaignButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            settingsButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            exitButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
+            bottomBarTable.addAction(Actions.sequence(Actions.moveBy(0f, -bottomBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
+        }
+    }
+
+    @Override
+    public void transitionEnd() {
+        rootTable.invalidate();
     }
 
     @Override
@@ -192,33 +229,5 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
 
     @Override
     public void dispose() {
-    }
-
-    @Override
-    public void transitionBegin() {
-        if(getTransitionScreen().getFrom() == this) {
-            topBarTable.addAction(Actions.moveBy(0f, topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
-            titleLabel.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            playButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            tutorialButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            campaignButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            settingsButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            exitButton.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
-        }else{
-            topBarTable.addAction(Actions.sequence(Actions.moveBy(0f, topBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, -topBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
-            titleLabel.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            playButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            tutorialButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            campaignButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            settingsButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            exitButton.addAction(Actions.sequence(Actions.moveBy(-rootTable.getWidth(), 0f), Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
-            bottomBarTable.addAction(Actions.sequence(Actions.moveBy(0f, -bottomBarTable.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade))));
-        }
-    }
-
-    @Override
-    public void transitionEnd() {
-        rootTable.invalidate();
     }
 }
