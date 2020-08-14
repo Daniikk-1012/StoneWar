@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.wgsoft.game.stonewar.screens.LoadingScreen;
 import com.wgsoft.game.stonewar.screens.MainMenuScreen;
+import com.wgsoft.game.stonewar.screens.MatchSettingsScreen;
 import com.wgsoft.game.stonewar.screens.SettingsScreen;
 
 import java.util.Locale;
@@ -37,6 +38,7 @@ public class MyGdxGame extends Game implements Localizable {
 
 	public MainMenuScreen mainMenuScreen;
 	public SettingsScreen settingsScreen;
+	public MatchSettingsScreen matchSettingsScreen;
 
 	public MyGdxGame(){
 		game = this;
@@ -50,7 +52,7 @@ public class MyGdxGame extends Game implements Localizable {
 
 		transitionScreen = new TransitionScreen();
 
-		loadingScreen = new LoadingScreen();
+		new LoadingScreen();
 
 		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
 		init();
@@ -91,6 +93,7 @@ public class MyGdxGame extends Game implements Localizable {
 		if(loaded) {
 			mainMenuScreen.localize();
 			settingsScreen.localize();
+			matchSettingsScreen.localize();
 		}else{
 			loadingScreen.localize();
 		}
@@ -133,6 +136,7 @@ public class MyGdxGame extends Game implements Localizable {
 		if(loaded) {
 			mainMenuScreen.dispose();
 			settingsScreen.dispose();
+			matchSettingsScreen.dispose();
 		}
 	}
 }

@@ -15,7 +15,7 @@ public class LoadingBubble extends Actor {
     private float toPercentX, toPercentY;
 
     public LoadingBubble(){
-        region = loadingScreen.skin.getRegion("bubble/"+LOADING_BUBBLES[MathUtils.random(LOADING_BUBBLES.length-1)]);
+        region = game.loadingScreen.skin.getRegion(BUBBLE_PATH+"/"+LOADING_BUBBLES[MathUtils.random(LOADING_BUBBLES.length-1)]);
         float size = MathUtils.random(MIN_LOADING_BUBBLE_SIZE, MAX_LOADING_BUBBLE_SIZE);
         setSize(size, size);
         switchFrom();
@@ -39,12 +39,12 @@ public class LoadingBubble extends Actor {
 
     public void setPositionFromPercent(){
         float percentX, percentY;
-        if(loadingScreen.progress < 0.5f) {
-            percentX = Interpolation.circleOut.apply(fromPercentX, toPercentX, loadingScreen.progress*2f);
-            percentY = Interpolation.circleOut.apply(fromPercentY, toPercentY, loadingScreen.progress*2f);
+        if(game.loadingScreen.progress < 0.5f) {
+            percentX = Interpolation.circleOut.apply(fromPercentX, toPercentX, game.loadingScreen.progress*2f);
+            percentY = Interpolation.circleOut.apply(fromPercentY, toPercentY, game.loadingScreen.progress*2f);
         }else{
-            percentX = Interpolation.circleIn.apply(toPercentX, fromPercentX, (loadingScreen.progress-0.5f)*2f);
-            percentY = Interpolation.circleIn.apply(toPercentY, fromPercentY, (loadingScreen.progress-0.5f)*2f);
+            percentX = Interpolation.circleIn.apply(toPercentX, fromPercentX, (game.loadingScreen.progress-0.5f)*2f);
+            percentY = Interpolation.circleIn.apply(toPercentY, fromPercentY, (game.loadingScreen.progress-0.5f)*2f);
         }
 
         setPosition(percentX*getStage().getWidth(), percentY*getStage().getHeight(), Align.center);
@@ -52,9 +52,9 @@ public class LoadingBubble extends Actor {
 
     @Override
     public void act(float delta) {
-        if(loadingScreen.prevProgress < 0.5f && loadingScreen.progress >= 0.5f){
+        if(game.loadingScreen.prevProgress < 0.5f && game.loadingScreen.progress >= 0.5f){
             switchFrom();
-        }else if(loadingScreen.prevProgress >= 0.5f && loadingScreen.progress < 0.5f){
+        }else if(game.loadingScreen.prevProgress >= 0.5f && game.loadingScreen.progress < 0.5f){
             switchTo();
         }
         setPositionFromPercent();

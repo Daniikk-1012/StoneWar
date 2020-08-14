@@ -67,37 +67,37 @@
     }
   }
   TextButtonStyle : {
-    play : {
-      up : button/play/up
-      down : button/play/down
+    red : {
+      up : button/red/up
+      down : button/red/down
       font : regularSmall
       fontColor : font
       downFontColor : fontDown
     }
-    tutorial : {
-      up : button/tutorial/up
-      down : button/tutorial/down
+    blue : {
+      up : button/blue/up
+      down : button/blue/down
       font : regularSmall
       fontColor : font
       downFontColor : fontDown
     }
-    campaign : {
-      up : button/campaign/up
-      down : button/campaign/down
+    green : {
+      up : button/green/up
+      down : button/green/down
       font : regularSmall
       fontColor : font
       downFontColor : fontDown
     }
-    settings : {
-      up : button/settings/up
-      down : button/settings/down
+    violet : {
+      up : button/violet/up
+      down : button/violet/down
       font : regularSmall
       fontColor : font
       downFontColor : fontDown
     }
-    exit : {
-      up : button/exit/up
-      down : button/exit/down
+    yellow : {
+      up : button/yellow/up
+      down : button/yellow/down
       font : regularSmall
       fontColor : font
       downFontColor : fontDown
@@ -109,12 +109,24 @@
     }
   }
   ScrollPaneStyle : {
-    language : {
-      background : select-box/language/scroll-pane/background
+    red : {
+      background : select-box/red/scroll-pane/background
+    }
+    blue : {
+      background : select-box/blue/scroll-pane/background
+    }
+    green : {
+      background : select-box/green/scroll-pane/background
+    }
+    violet : {
+      background : select-box/violet/scroll-pane/background
+    }
+    yellow : {
+      background : select-box/yellow/scroll-pane/background
     }
   }
   ListStyle : {
-    language : {
+    list : {
       selection : selection
       font : regularSmall
       fontColorSelected : fontDown
@@ -122,21 +134,65 @@
     }
   }
   SelectBoxStyle : {
-    language : {
-      background : select-box/language/background
-      backgroundOpen : select-box/language/background-open
-      listStyle : language
-      scrollStyle : language
+    red : {
+      background : select-box/red/background
+      backgroundOpen : select-box/red/background-open
+      listStyle : list
+      scrollStyle : red
+      font : regularSmall
+      fontColor : font
+    }
+    blue : {
+      background : select-box/blue/background
+      backgroundOpen : select-box/blue/background-open
+      listStyle : list
+      scrollStyle : blue
+      font : regularSmall
+      fontColor : font
+    }
+    green : {
+      background : select-box/green/background
+      backgroundOpen : select-box/green/background-open
+      listStyle : list
+      scrollStyle : green
+      font : regularSmall
+      fontColor : font
+    }
+    violet : {
+      background : select-box/violet/background
+      backgroundOpen : select-box/violet/background-open
+      listStyle : list
+      scrollStyle : violet
+      font : regularSmall
+      fontColor : font
+    }
+    yellow : {
+      background : select-box/yellow/background
+      backgroundOpen : select-box/yellow/background-open
+      listStyle : list
+      scrollStyle : yellow
       font : regularSmall
       fontColor : font
     }
   }
   SliderStyle : {
-    music : {
+    red : {
       background : slider/background
       knob : slider/knob
     }
-    sound : {
+    blue : {
+      background : slider/background
+      knob : slider/knob
+    }
+    green : {
+      background : slider/background
+      knob : slider/knob
+    }
+    violet : {
+      background : slider/background
+      knob : slider/knob
+    }
+    yellow : {
       background : slider/background
       knob : slider/knob
     }

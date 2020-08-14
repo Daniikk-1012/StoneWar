@@ -14,7 +14,7 @@ public class Bubble extends Actor {
     private float speed;
 
     public Bubble(boolean initial){
-        region = game.skin.getRegion("menu-bubble/"+BUBBLES[MathUtils.random(BUBBLES.length-1)]);
+        region = game.skin.getRegion(BUBBLE_PATH+"/"+BUBBLES[MathUtils.random(BUBBLES.length-1)]);
         float size = MathUtils.random(MIN_BUBBLE_SIZE, MAX_BUBBLE_SIZE);
         setSize(size, size);
         percentX = MathUtils.random();
