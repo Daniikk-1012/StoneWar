@@ -146,7 +146,7 @@ public class SettingsScreen extends TransitionableScreen implements Localizable 
 
         Stack soundStack = new Stack();
 
-        soundSlider = new Slider(MIN_SETTINGS_SOUND_VOLUME, MAX_SETTINGS_SOUND_VOLUME, SETTINGS_SOUND_VOLUME_STEP, false, game.skin, "green"){
+        soundSlider = new Slider(0f, 100f, SETTINGS_SOUND_VOLUME_STEP, false, game.skin, "green"){
             @Override
             public float getPrefWidth() {
                 return getStyle().background.getLeftWidth()+getStyle().background.getMinWidth()+getStyle().background.getRightWidth();

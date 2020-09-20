@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
 import com.wgsoft.game.stonewar.objects.loading.LoadingBubble;
-import com.wgsoft.game.stonewar.objects.mainmenu.Bubble;
+import com.wgsoft.game.stonewar.objects.Bubble;
 
 import static com.wgsoft.game.stonewar.Const.*;
 

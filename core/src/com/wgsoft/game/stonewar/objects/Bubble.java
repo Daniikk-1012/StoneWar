@@ -1,4 +1,4 @@
-package com.wgsoft.game.stonewar.objects.mainmenu;
+package com.wgsoft.game.stonewar.objects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -14,7 +14,7 @@ public class Bubble extends Actor {
     private float speed;
 
     public Bubble(boolean initial){
-        region = game.skin.getRegion(BUBBLE_PATH+"/"+BUBBLES[MathUtils.random(BUBBLES.length-1)]);
+        region = game.skin.getRegion("bubble/"+BUBBLES[MathUtils.random(BUBBLES.length-1)]);
         float size = MathUtils.random(MIN_BUBBLE_SIZE, MAX_BUBBLE_SIZE);
         setSize(size, size);
         percentX = MathUtils.random();
@@ -28,7 +28,9 @@ public class Bubble extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        batch.setColor(1f, 1f, 1f, parentAlpha);
         batch.draw(region, getX(), getY(), getWidth(), getHeight());
+        batch.setColor(1f, 1f, 1f, 1f);
     }
 
     public void setPositionFromPercent(){

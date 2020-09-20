@@ -15,7 +15,7 @@ public class LoadingBubble extends Actor {
     private float toPercentX, toPercentY;
 
     public LoadingBubble(){
-        region = game.loadingScreen.skin.getRegion(BUBBLE_PATH+"/"+LOADING_BUBBLES[MathUtils.random(LOADING_BUBBLES.length-1)]);
+        region = game.loadingScreen.skin.getRegion("bubble/"+LOADING_BUBBLES[MathUtils.random(LOADING_BUBBLES.length-1)]);
         float size = MathUtils.random(MIN_LOADING_BUBBLE_SIZE, MAX_LOADING_BUBBLE_SIZE);
         setSize(size, size);
         switchFrom();
