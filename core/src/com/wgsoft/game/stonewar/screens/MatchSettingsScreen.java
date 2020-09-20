@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.stonewar.Localizable;
 import com.wgsoft.game.stonewar.TransitionableScreen;
+import com.wgsoft.game.stonewar.objects.matchsettings.Difficulty;
+import com.wgsoft.game.stonewar.objects.matchsettings.Diplomacy;
+import com.wgsoft.game.stonewar.objects.matchsettings.MapSize;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
@@ -28,15 +31,15 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
     private Label matchSettingsLabel;
     private Table wrapperTable;
     private Label difficultyLabel;
-    private SelectBox<String> difficultySelectBox;
+    private SelectBox<Difficulty> difficultySelectBox;
     private Label sizeLabel;
-    private SelectBox<String> sizeSelectBox;
+    private SelectBox<MapSize> sizeSelectBox;
     private Label playersLabel;
     private SelectBox<Integer> playersSelectBox;
     private Label botsLabel;
     private SelectBox<Integer> botsSelectBox;
     private Label diplomacyLabel;
-    private SelectBox<String> diplomacySelectBox;
+    private SelectBox<Diplomacy> diplomacySelectBox;
     private Table bottomBarTable;
     private TextButton backButton;
     private TextButton startButton;
@@ -79,8 +82,8 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
         difficultySelectBox.setAlignment(Align.center);
         difficultySelectBox.getList().setAlignment(Align.center);
         difficultySelectBox.setMaxListCount(MAX_SELECT_BOX_LIST_COUNT);
-        difficultySelectBox.setItems("match-settings.difficulty.low", "match-settings.difficulty.medium", "match-settings.difficulty.high");
-        difficultySelectBox.setSelectedIndex(0);
+        difficultySelectBox.setItems(Difficulty.LOW, Difficulty.MEDIUM, Difficulty.HIGH);
+        difficultySelectBox.setSelected(Difficulty.LOW);
         wrapperTable.add(difficultySelectBox);
 
         wrapperTable.row();
@@ -96,7 +99,7 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
         sizeSelectBox.setAlignment(Align.center);
         sizeSelectBox.getList().setAlignment(Align.center);
         sizeSelectBox.setMaxListCount(MAX_SELECT_BOX_LIST_COUNT);
-        sizeSelectBox.setItems("18x18", "24x24", "30x30");
+        sizeSelectBox.setItems(new MapSize(18, 18), new MapSize(24, 24), new MapSize(36,  36));
         sizeSelectBox.setSelectedIndex(0);
         wrapperTable.add(sizeSelectBox);
 
@@ -171,8 +174,8 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
         diplomacySelectBox = new SelectBox<>(game.skin, "yellow");
         diplomacySelectBox.setAlignment(Align.center);
         diplomacySelectBox.getList().setAlignment(Align.center);
-        diplomacySelectBox.setItems("match-settings.diplomacy.off", "match-settings.diplomacy.on");
-        diplomacySelectBox.setSelectedIndex(0);
+        diplomacySelectBox.setItems(Diplomacy.ON, Diplomacy.OFF);
+        diplomacySelectBox.setSelected(Diplomacy.OFF);
         wrapperTable.add(diplomacySelectBox);
 
         rootTable.add(wrapperTable).growY();
@@ -207,12 +210,12 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
     public void localize() {
         matchSettingsLabel.setText(game.bundle.get("match-settings.match-settings"));
         difficultyLabel.setText(game.bundle.get("match-settings.difficulty"));
-        difficultySelectBox.setItems(game.bundle.get("match-settings.difficulty.low"), game.bundle.get("match-settings.difficulty.medium"), game.bundle.get("match-settings.difficulty.high"));
+        difficultySelectBox.setItems(difficultySelectBox.getItems());
         sizeLabel.setText(game.bundle.get("match-settings.size"));
         playersLabel.setText(game.bundle.get("match-settings.players"));
         botsLabel.setText(game.bundle.get("match-settings.bots"));
         diplomacyLabel.setText(game.bundle.get("match-settings.diplomacy"));
-        diplomacySelectBox.setItems(game.bundle.get("match-settings.diplomacy.off"), game.bundle.get("match-settings.diplomacy.on"));
+        diplomacySelectBox.setItems(diplomacySelectBox.getItems());
         backButton.setText(game.bundle.get("match-settings.back"));
         startButton.setText(game.bundle.get("match-settings.start"));
     }
@@ -220,16 +223,23 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
     @Override
     public void transitionBegin() {
         if(getTransitionScreen().getFrom() == this){
-            topBarImage.addAction(Actions.moveBy(0f, topBarImage.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade));
-            matchSettingsLabel.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            wrapperTable.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
-            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade));
+            if(getTransitionScreen().getTo() == game.mainMenuScreen) {
+                topBarImage.addAction(Actions.moveBy(0f, topBarImage.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+                matchSettingsLabel.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+                wrapperTable.addAction(Actions.moveBy(rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            }else{
+                backgroundStage.addAction(Actions.alpha(0f, getTransitionScreen().getDuration(), Interpolation.fade));
+                matchSettingsLabel.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+                wrapperTable.addAction(Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade));
+            }
+            topBarImage.addAction(Actions.moveBy(0f, topBarImage.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
+            bottomBarTable.addAction(Actions.moveBy(0f, -bottomBarTable.getHeight(), getTransitionScreen().getDuration() / 2f, Interpolation.fade));
         }else{
-            difficultySelectBox.setSelectedIndex(0);
+            difficultySelectBox.setSelected(Difficulty.LOW);
             sizeSelectBox.setSelectedIndex(0);
             playersSelectBox.setSelected(MAX_PLAYER_COUNT);
             botsSelectBox.setSelected(0);
-            diplomacySelectBox.setSelectedIndex(0);
+            diplomacySelectBox.setSelected(Diplomacy.OFF);
             topBarImage.addAction(Actions.sequence(Actions.moveBy(0f, topBarImage.getHeight()), Actions.delay(getTransitionScreen().getDuration()/2f, Actions.moveBy(0f, -topBarImage.getHeight(), getTransitionScreen().getDuration()/2f, Interpolation.fade))));
             matchSettingsLabel.addAction(Actions.sequence(Actions.moveBy(rootTable.getWidth(), 0f), Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
             wrapperTable.addAction(Actions.sequence(Actions.moveBy(rootTable.getWidth(), 0f), Actions.moveBy(-rootTable.getWidth(), 0f, getTransitionScreen().getDuration(), Interpolation.fade)));
@@ -239,6 +249,7 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
 
     @Override
     public void transitionEnd() {
+        backgroundStage.getRoot().setColor(1f, 1f, 1f, 1f);
         rootTable.invalidate();
     }
 
