@@ -90,12 +90,14 @@ project(":core") {
     }
 }
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.tools.texturepacker.TexturePacker
 
 task texturePacker {
     doLast {
         def settings = new TexturePacker.Settings()
         settings.combineSubdirectories = true
+        settings.filterMin = Texture.TextureFilter.Linear
         logger.info "Calling TexturePacker(1): "+texturePacker
         TexturePacker.processIfModified settings, "raw-img", "android/assets/img", "skin"
         logger.info "Calling TexturePacker(2): "+texturePacker
