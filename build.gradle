@@ -68,13 +68,25 @@ project(":android") {
     }
 }
 
+task createProperties {
+    doLast {
+        new File("$projectDir/android/assets/bundle/properties.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p.store w, null
+        }
+    }
+}
+
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+    }
+
+    classes {
+        dependsOn createProperties
     }
 }
 

@@ -15,7 +15,9 @@ import com.wgsoft.game.stonewar.screens.MainMenuScreen;
 import com.wgsoft.game.stonewar.screens.MatchSettingsScreen;
 import com.wgsoft.game.stonewar.screens.SettingsScreen;
 
+import java.io.InputStream;
 import java.util.Locale;
+import java.util.Properties;
 
 import static com.wgsoft.game.stonewar.Const.*;
 
@@ -26,6 +28,7 @@ public class MyGdxGame extends Game implements Localizable {
 	public Preferences prefs;
 
 	public I18NBundle bundle;
+	public Properties properties;
 
 	public SpriteBatch batch;
 
@@ -55,6 +58,13 @@ public class MyGdxGame extends Game implements Localizable {
 		new LoadingScreen();
 
 		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
+		properties = new Properties();
+		try {
+			InputStream inputStream = Gdx.files.internal("bundle/properties.properties").read();
+			properties.load(inputStream);
+			inputStream.close();
+		}catch (Exception ignored){
+		}
 		init();
 
 		setScreen(loadingScreen);

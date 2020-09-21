@@ -33,7 +33,6 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
     private TextButton exitButton;
     private Table bottomBarTable;
     private TextButton achievementsButton;
-    private Label versionLabel;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -133,7 +132,7 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
 
         bottomBarTable.add().grow();
 
-        versionLabel = new Label("main-menu.version", game.skin, "regularLarge");
+        Label versionLabel = new Label(game.properties.getProperty("version"), game.skin, "regularLarge");
         bottomBarTable.add(versionLabel).growY().padRight(BAR_PADDING_HORIZONTAL);
 
         rootTable.add(bottomBarTable).growX().height(BAR_HEIGHT);
@@ -151,7 +150,6 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
         settingsButton.setText(game.bundle.get("main-menu.settings"));
         exitButton.setText(game.bundle.get("main-menu.exit"));
         achievementsButton.setText(game.bundle.get("main-menu.achievements"));
-        versionLabel.setText(game.bundle.get("main-menu.version"));
     }
 
     @Override
