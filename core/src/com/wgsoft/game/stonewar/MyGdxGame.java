@@ -60,9 +60,9 @@ public class MyGdxGame extends Game implements Localizable {
 			InputStream inputStream = Gdx.files.internal("bundle/properties.properties").read();
 			properties.load(inputStream);
 			inputStream.close();
+			prefs = Gdx.app.getPreferences(properties.getProperty("package-name"));
 		}catch (Exception ignored){
 		}
-		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
 
 		new LoadingScreen();
 

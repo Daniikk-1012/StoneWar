@@ -20,6 +20,7 @@ task createProperties {
             Properties p = new Properties()
             p['version'] = project.version.toString()
             p['title'] = project.ext.title.toString()
+            p['package-name'] = project.ext.packageName.toString()
             p.store w, null
         }
     }
@@ -37,6 +38,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         title = 'Stone war'
+        packageName = 'com.wgsoft.game.stonewar'
     }
 
     repositories {
