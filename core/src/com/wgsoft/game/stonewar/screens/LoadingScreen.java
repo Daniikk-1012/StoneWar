@@ -31,7 +31,6 @@ public class LoadingScreen implements Screen, Localizable {
     public float progress, prevProgress;
 
     private Label loadingLabel;
-    private Label titleLabel;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -71,7 +70,7 @@ public class LoadingScreen implements Screen, Localizable {
         Table frontRootTable = new Table(skin);
         frontRootTable.setFillParent(true);
 
-        titleLabel = new Label("loading.title", skin, "boldLarge");
+        Label titleLabel = new Label(game.properties.getProperty("title"), skin, "boldLarge");
         titleLabel.setAlignment(Align.center);
         titleLabel.setWrap(true);
         frontRootTable.add(titleLabel).grow();
@@ -81,7 +80,6 @@ public class LoadingScreen implements Screen, Localizable {
 
     public void localize(){
         loadingLabel.setText(game.bundle.get("loading.loading"));
-        titleLabel.setText(game.bundle.get("loading.title"));
     }
 
     @Override

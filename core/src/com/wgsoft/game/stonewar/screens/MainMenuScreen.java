@@ -62,7 +62,7 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
         rootTable.add().grow();
         rootTable.row();
 
-        titleLabel = new Label("main-menu.title", game.skin, "boldLarge");
+        titleLabel = new Label(game.properties.getProperty("title"), game.skin, "boldLarge");
         titleLabel.setAlignment(Align.center);
         titleLabel.setWrap(true);
         rootTable.add(titleLabel).growX();
@@ -143,7 +143,6 @@ public class MainMenuScreen extends TransitionableScreen implements Localizable 
     public void localize(){
         rateButton.setText(game.bundle.get("main-menu.rate"));
         authorsButton.setText(game.bundle.get("main-menu.authors"));
-        titleLabel.setText(game.bundle.get("main-menu.title"));
         playButton.setText(game.bundle.get("main-menu.play"));
         tutorialButton.setText(game.bundle.get("main-menu.tutorial"));
         campaignButton.setText(game.bundle.get("main-menu.campaign"));

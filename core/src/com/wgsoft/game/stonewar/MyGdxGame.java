@@ -55,9 +55,6 @@ public class MyGdxGame extends Game implements Localizable {
 
 		transitionScreen = new TransitionScreen();
 
-		new LoadingScreen();
-
-		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
 		properties = new Properties();
 		try {
 			InputStream inputStream = Gdx.files.internal("bundle/properties.properties").read();
@@ -65,6 +62,10 @@ public class MyGdxGame extends Game implements Localizable {
 			inputStream.close();
 		}catch (Exception ignored){
 		}
+		prefs = Gdx.app.getPreferences("com.wgsoft.game.stonewar");
+
+		new LoadingScreen();
+
 		init();
 
 		setScreen(loadingScreen);
