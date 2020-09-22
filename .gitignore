@@ -134,3 +134,4 @@ Thumbs.db
 !/android/assets/loading/fnt/
 !/android/assets/loading/skin.json
 /android/assets/bundle/properties.properties
+/android/assets/bundle/bundle.properties

@@ -14,6 +14,21 @@ buildscript {
     }
 }
 
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+
+task texturePacker {
+    doLast {
+        def settings = new TexturePacker.Settings()
+        settings.combineSubdirectories = true
+        settings.filterMin = Texture.TextureFilter.Linear
+        logger.info "Calling TexturePacker(1): "+texturePacker
+        TexturePacker.processIfModified settings, "raw-img", "android/assets/img", "skin"
+        logger.info "Calling TexturePacker(2): "+texturePacker
+        TexturePacker.processIfModified settings, "raw-loading", "android/assets/loading", "skin"
+    }
+}
+
 task createProperties {
     doLast {
         new File("$projectDir/android/assets/bundle/properties.properties").withWriter { w ->
@@ -24,6 +39,12 @@ task createProperties {
             p.store w, null
         }
     }
+}
+
+task copyBundle(type: Copy) {
+    from file("$projectDir/android/assets/bundle/bundle_en.properties")
+    into file("$projectDir/android/assets/bundle")
+    rename ".+", "bundle.properties"
 }
 
 allprojects {
@@ -54,12 +75,10 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -76,7 +95,6 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        
     }
 }
 
@@ -88,21 +106,6 @@ project(":core") {
     }
 
     classes {
-        dependsOn createProperties
-    }
-}
-
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.tools.texturepacker.TexturePacker
-
-task texturePacker {
-    doLast {
-        def settings = new TexturePacker.Settings()
-        settings.combineSubdirectories = true
-        settings.filterMin = Texture.TextureFilter.Linear
-        logger.info "Calling TexturePacker(1): "+texturePacker
-        TexturePacker.processIfModified settings, "raw-img", "android/assets/img", "skin"
-        logger.info "Calling TexturePacker(2): "+texturePacker
-        TexturePacker.processIfModified settings, "raw-loading", "android/assets/loading", "skin"
+        dependsOn texturePacker, createProperties, copyBundle
     }
 }
