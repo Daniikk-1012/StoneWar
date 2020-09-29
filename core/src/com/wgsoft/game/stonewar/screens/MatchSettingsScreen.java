@@ -199,6 +199,13 @@ public class MatchSettingsScreen extends TransitionableScreen implements Localiz
         bottomBarTable.add().grow();
 
         startButton = new TextButton("match-settings.start", game.skin, "transparent");
+        startButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.gameScreen.init(sizeSelectBox.getSelected().getWidth(), sizeSelectBox.getSelected().getHeight(), playersSelectBox.getSelected());
+                game.setScreen(game.transitionScreen.setup(game.matchSettingsScreen, game.gameScreen, true, SCREEN_TRANSITION_DURATION));
+            }
+        });
         bottomBarTable.add(startButton).padRight(BAR_PADDING_HORIZONTAL);
 
         rootTable.add(bottomBarTable).growX().height(BAR_HEIGHT);

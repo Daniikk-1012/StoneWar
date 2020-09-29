@@ -29,6 +29,11 @@ public class Const {
     public static final float SETTINGS_MUSIC_VOLUME_STEP = 1f;
     public static final float SETTINGS_SOUND_VOLUME_STEP = 1f;
     public static final float SCREEN_TRANSITION_DURATION = 1.5f;
+    public static final float GAME_CELL_ASPECT_RATIO = 0.861538461f;
+    public static final float GAME_SCROLL_SCALE_AMOUNT = 0.05f;
+    public static final float MIN_GAME_MAP_SCALE = 1f;
+    public static final float MAX_GAME_MAP_SCALE = 5f;
+    public static final float GAME_ICON_SCALE = 0.666666667f;
     public static final String[] BUBBLES = new String[]{
             "blue",
             "yellow",

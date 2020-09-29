@@ -28,9 +28,9 @@ public class LoadingScreen implements Screen, Localizable {
     private Stage backgroundStage;
     private Stage uiStage;
 
-    public float progress, prevProgress;
-
     private Label loadingLabel;
+
+    public float progress, prevProgress;
 
     private InputMultiplexer inputMultiplexer;
 
@@ -162,10 +162,17 @@ public class LoadingScreen implements Screen, Localizable {
                             game.matchSettingsScreen = new MatchSettingsScreen();
                         }
                     });
+                    runnableQueue.addLast(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.gameScreen = new GameScreen();
+                        }
+                    });
                     while(
                             game.mainMenuScreen == null
                             || game.settingsScreen == null
                             || game.matchSettingsScreen == null
+                            || game.gameScreen == null
                     ){
                         try {
                             Thread.sleep(100);
